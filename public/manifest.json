@@ -1,0 +1,27 @@
+{
+  "short_name": "Kanban",
+  "name": "Kanban - Управление задачами", 
+  "description": "Продуктивное приложение для управления задачами Kanban",
+  "icons": [
+    {
+      "src": "icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512x512.png",
+      "sizes": "512x512", 
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "/?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "theme_color": "#635f5f",
+  "background_color": "#85c3c7",
+  "categories": ["productivity", "business"],
+  "lang": "ru",
+  "orientation": "portrait"
+}

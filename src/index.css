@@ -1,0 +1,110 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Kanban Design System - Minimalist: White, Black, Blue */
+
+@layer base {
+  :root {
+    /* Core colors - Minimalist palette */
+    --background: 0 0% 100%;
+    --foreground: 0 0% 0%;
+    
+    /* Card system */
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 0%;
+    --card-shadow: 0 0% 0% / 0.05;
+    
+    /* Blue accent system */
+    --primary: 221 83% 53%;           /* #1E40AF - Main blue */
+    --primary-foreground: 0 0% 100%;  /* White text on blue */
+    --primary-hover: 221 83% 45%;     /* Darker blue for hover */
+    
+    /* Secondary grays */
+    --secondary: 0 0% 96%;            /* Light gray backgrounds */
+    --secondary-foreground: 0 0% 20%; /* Dark gray text */
+    
+    /* Muted colors */
+    --muted: 0 0% 98%;                /* Very light gray */
+    --muted-foreground: 0 0% 45%;     /* Medium gray text */
+    
+    /* Border and input */
+    --border: 0 0% 90%;               /* Light gray borders */
+    --input: 0 0% 94%;                /* Input backgrounds */
+    --ring: 221 83% 53%;              /* Blue focus rings */
+    
+    /* Status colors */
+    --success: 142 71% 45%;           /* Green for completed */
+    --warning: 45 93% 47%;            /* Orange for in progress */
+    --destructive: 0 84% 60%;         /* Red for urgent/delete */
+    --destructive-foreground: 0 0% 100%;
+    
+    /* Layout */
+    --radius: 8px;
+    --column-bg: 0 0% 98%;            /* Column backgrounds */
+    --kanban-bg: 0 0% 97%;            /* Main board background */
+    
+    /* Professional role colors */
+    --role-developer: 264 83% 57%;    /* Purple for developers */
+    --role-designer: 339 81% 62%;     /* Pink for designers */
+    --role-manager: 162 73% 46%;      /* Teal for managers */
+    --role-qa: 32 95% 44%;           /* Orange for QA */
+    
+    /* Animations */
+    --transition-smooth: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+
+  .dark {
+    --background: 0 0% 8%;
+    --foreground: 0 0% 95%;
+    --card: 0 0% 10%;
+    --card-foreground: 0 0% 95%;
+    --card-shadow: 0 0% 0% / 0.3;
+    --muted: 0 0% 12%;
+    --muted-foreground: 0 0% 65%;
+    --border: 0 0% 20%;
+    --input: 0 0% 15%;
+    --column-bg: 0 0% 12%;
+    --kanban-bg: 0 0% 8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply bg-background text-foreground font-sans;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  }
+
+  /* Kanban specific styles */
+  .kanban-column {
+    @apply bg-column-bg rounded-xl border border-border p-4 min-h-[600px] w-80 flex-shrink-0;
+    box-shadow: 0 2px 8px hsl(var(--card-shadow));
+  }
+  
+  .kanban-card {
+    @apply bg-card rounded-lg border border-border p-4 mb-3 cursor-pointer;
+    box-shadow: 0 1px 3px hsl(var(--card-shadow));
+    transition: var(--transition-smooth);
+  }
+  
+  .kanban-card:hover {
+    @apply shadow-md transform -translate-y-0.5;
+    box-shadow: 0 4px 12px hsl(var(--card-shadow));
+  }
+  
+  .role-badge {
+    @apply inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium;
+  }
+  
+  .role-developer { @apply bg-violet-100 text-violet-800; }
+  .role-designer { @apply bg-pink-100 text-pink-800; }
+  .role-manager { @apply bg-teal-100 text-teal-800; }
+  .role-qa { @apply bg-orange-100 text-orange-800; }
+}
