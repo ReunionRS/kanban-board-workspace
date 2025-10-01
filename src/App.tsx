@@ -10,6 +10,7 @@ import Profile from "./pages/Profile";
 import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
 import Board from "./pages/Board";
+import AIChatPage from "./pages/AIChatPage";
 
 const queryClient = new QueryClient();
 
@@ -93,6 +94,12 @@ const AppRoutes = () => (
     <Route path="/board/:boardId" element={
       <PrivateRoute>
         <Board />
+      </PrivateRoute>
+    } />
+    
+    <Route path="/ai-chat" element={
+      <PrivateRoute>
+        <AIChatPage />
       </PrivateRoute>
     } />
     

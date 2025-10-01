@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Plus, Search, Filter, Grid, List, MoreVertical, Users, Calendar, Settings, Trash2, LogOut, User, Mail } from 'lucide-react';
+import { Plus, Search, Filter, Grid, List, MoreVertical, Users, Calendar, Settings, Trash2, LogOut, User, Mail, Bot } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -194,18 +194,27 @@ const Dashboard = () => {
         </div>
       </header>
 
-      <div className="container mx-auto p-6">
-        <div className="flex items-center justify-between mb-8">
+      <div className="container mx-auto p-4 sm:p-6">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8 gap-4">
           <div>
-            <h1 className="text-3xl font-bold">Доски</h1>
+            <h1 className="text-2xl lg:text-3xl font-bold">Доски</h1>
             <p className="text-muted-foreground">Управляйте своими проектами и задачами</p>
           </div>
-          <CreateBoardDialog onBoardCreated={handleBoardCreated}>
-            <Button>
-              <Plus className="w-4 h-4 mr-2" />
-              Создать доску
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3">
+            <Button variant="outline" asChild className="w-full sm:w-auto">
+              <Link to="/ai-chat">
+                <Bot className="w-4 h-4 mr-2" />
+                <span className="hidden sm:inline">Спросить у ИИ агента</span>
+                <span className="sm:hidden">ИИ агент</span>
+              </Link>
             </Button>
-          </CreateBoardDialog>
+            <CreateBoardDialog onBoardCreated={handleBoardCreated}>
+              <Button className="w-full sm:w-auto">
+                <Plus className="w-4 h-4 mr-2" />
+                Создать доску
+              </Button>
+            </CreateBoardDialog>
+          </div>
         </div>
 
         <div className="flex flex-col sm:flex-row gap-4 mb-6">

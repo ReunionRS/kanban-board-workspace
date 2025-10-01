@@ -80,6 +80,58 @@
   body {
     @apply bg-background text-foreground font-sans;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    overflow-x: hidden; /* гарантированно скрываем горизонтальный скролл */
+  }
+  /* Агрессивные безопасные правила переноса контента чата */
+  .prose, .prose * {
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    max-width: 100%;
+  }
+  .prose pre {
+    overflow-x: auto;
+    white-space: pre-wrap; /* переносим длинные строки в коде на мобильных */
+  }
+  .prose code {
+    white-space: pre-wrap;
+  }
+  .prose img, .prose table, .prose blockquote {
+    max-width: 100%;
+  }
+  .prose table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+  }
+  .prose ul, .prose ol {
+    padding-left: 1.25rem;
+  }
+
+  /* Радикс ScrollArea: запрещаем горизонтальный скролл во viewporте */
+  [data-radix-scroll-area-viewport] {
+    overflow-x: hidden !important;
+  }
+
+  /* ChatScope overrides: полноэкранная высота и отсутствие обрезания контента */
+  .cs-main-container, .cs-chat-container {
+    height: 100% !important;
+  }
+  /* Снимаем ограничение ширины пузыря и запрещаем горизонтальный скролл внутри */
+  .cs-message__content {
+    max-width: 100% !important;
+    overflow-x: visible !important;
+    word-break: break-word;
+  }
+  .cs-message__content > * {
+    max-width: 100% !important;
+  }
+  .cs-message__content pre,
+  .cs-message__content code {
+    white-space: pre-wrap !important;
+    word-break: break-word !important;
+  }
+  .cs-message {
+    animation: message-appear 0.3s ease-out;
   }
 
   /* Kanban specific styles */
@@ -107,4 +159,584 @@
   .role-designer { @apply bg-pink-100 text-pink-800; }
   .role-manager { @apply bg-teal-100 text-teal-800; }
   .role-qa { @apply bg-orange-100 text-orange-800; }
+}
+
+/* AI Chat Animations */
+@layer utilities {
+  .animate-in {
+    animation: animate-in 0.3s ease-out;
+  }
+  
+  .slide-in-from-bottom-2 {
+    animation: slide-in-from-bottom-2 0.3s ease-out;
+  }
+  
+  .slide-in-from-bottom-4 {
+    animation: slide-in-from-bottom-4 0.5s ease-out;
+  }
+  
+  .fade-in {
+    animation: fade-in 0.3s ease-out;
+  }
+  
+  .typing-animation {
+    animation: typing 1.5s infinite;
+  }
+  
+  .message-appear {
+    animation: message-appear 0.4s ease-out;
+  }
+  
+  .chat-bounce {
+    animation: chat-bounce 0.6s ease-out;
+  }
+}
+
+@keyframes animate-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-in-from-bottom-2 {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-in-from-bottom-4 {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes typing {
+  0%, 60%, 100% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes message-appear {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes chat-bounce {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* FIXED: Основные исправления для контейнера чата */
+.ai-chat-container {
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.ai-chat-main {
+  flex: 1;
+  min-width: 0; /* Критически важно для flex-элементов */
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* FIXED: Исправления для области сообщений */
+.ai-chat-main .scroll-area {
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+}
+
+/* FIXED: Контейнер сообщений - убираем ограничения по ширине */
+.ai-chat-messages-container {
+  max-width: none !important;
+  width: 100% !important;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+/* FIXED: Баблы сообщений */
+.message-bubble-user {
+  max-width: calc(100% - 4rem) !important;
+}
+
+.message-bubble-assistant {
+  max-width: calc(100% - 4rem) !important;
+}
+
+/* FIXED: Критические исправления для текста и Markdown */
+.prose {
+  max-width: 100% !important;
+  width: 100% !important;
+  word-wrap: break-word !important;
+  overflow-wrap: break-word !important;
+  word-break: break-word !important;
+}
+
+.prose pre,
+.prose code {
+  white-space: pre-wrap !important;
+  word-break: break-word !important;
+  overflow-wrap: break-word !important;
+  max-width: 100% !important;
+}
+
+.prose * {
+  max-width: 100% !important;
+  word-wrap: break-word !important;
+  overflow-wrap: break-word !important;
+}
+
+/* FIXED: Контейнеры кода */
+.prose pre {
+  background: hsl(var(--muted)) !important;
+  padding: 1rem !important;
+  border-radius: 0.5rem !important;
+  margin: 0.5rem 0 !important;
+  overflow-x: auto !important;
+}
+
+.prose code {
+  background: hsl(var(--muted)) !important;
+  padding: 0.2rem 0.4rem !important;
+  border-radius: 0.25rem !important;
+  font-size: 0.875rem !important;
+}
+
+/* FIXED: Кастомные блоки кода с кнопкой копирования */
+.code-block-container {
+  max-width: 100% !important;
+  width: 100% !important;
+}
+
+.code-block-container pre {
+  max-width: 100% !important;
+  width: 100% !important;
+  overflow-x: auto !important;
+}
+
+/* FIXED: Поле ввода */
+.input-container {
+  max-width: none !important;
+  width: 100% !important;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+/* Mobile optimizations */
+@media (max-width: 1024px) {
+  .mobile-menu-slide {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .mobile-overlay {
+    backdrop-filter: blur(2px);
+    background: rgba(0, 0, 0, 0.3);
+  }
+  
+  /* FIXED: Мобильные баблы сообщений */
+  .message-bubble-user-mobile {
+    max-width: calc(100% - 3rem) !important;
+  }
+  
+  .message-bubble-assistant-mobile {
+    max-width: calc(100% - 3rem) !important;
+  }
+  
+  /* FIXED: Мобильные отступы */
+  .mobile-padding {
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+  }
+  
+  .mobile-padding-wide {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+  
+  /* FIXED: Мобильный контейнер сообщений */
+  .mobile-messages-container {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  
+  .ai-chat-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 320px;
+    z-index: 50;
+    background: hsl(var(--muted));
+    border-right: 1px solid hsl(var(--border));
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .ai-chat-sidebar.open {
+    transform: translateX(0);
+  }
+  
+  .ai-chat-main {
+    width: 100%;
+    margin-left: 0px;
+    margin-right: 0px;
+    min-width: 0;
+  }
+
+  /* FIXED: Улучшенная обработка длинного контента на мобильных */
+  .prose, .prose * {
+    word-break: break-word !important;
+    overflow-wrap: anywhere !important;
+    hyphens: auto !important;
+  }
+  
+  .prose {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    font-size: 0.875rem !important;
+    line-height: 1.5 !important;
+  }
+  
+  .prose pre, .prose code {
+    white-space: pre-wrap !important;
+    word-break: break-word !important;
+    font-size: 0.8rem !important;
+  }
+  
+  .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6,
+  .prose ul, .prose ol, .prose p, .prose hr {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+  
+  /* FIXED: Уменьшаем отступы в сообщениях на мобильных */
+  .mobile-message-padding {
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .ai-chat-sidebar {
+    position: static;
+    transform: none;
+    width: 320px;
+    height: auto;
+    box-shadow: none;
+    background: hsl(var(--muted) / 0.3);
+  }
+  
+  .ai-chat-main {
+    margin-left: 0;
+    min-width: 0;
+  }
+  
+  .mobile-overlay {
+    display: none;
+  }
+  
+  /* FIXED: Десктопные улучшения */
+  .desktop-messages-container {
+    max-width: 880px !important;
+    width: 100% !important;
+  }
+  
+  .message-bubble-user-desktop {
+    max-width: calc(100% - 8rem) !important;
+  }
+  
+  .message-bubble-assistant-desktop {
+    max-width: calc(100% - 8rem) !important;
+  }
+}
+
+/* FIXED: Экстренные исправления для очень длинного контента */
+.break-words {
+  word-break: break-word !important;
+  overflow-wrap: break-word !important;
+}
+
+.whitespace-pre-wrap {
+  white-space: pre-wrap !important;
+}
+
+.min-w-0 {
+  min-width: 0 !important;
+}
+
+.overflow-hidden {
+  overflow: hidden !important;
+}
+
+/* FIXED: Гарантия что контент не выходит за пределы */
+.ai-chat-main * {
+  box-sizing: border-box !important;
+  max-width: 100% !important;
+}
+
+/* Гарантия переноса длинных строк и кода */
+.ai-chat-main pre,
+.ai-chat-main code {
+  white-space: pre-wrap !important;
+  word-break: break-all !important;
+  overflow-wrap: anywhere !important;
+  max-width: 100% !important;
+}
+
+.ai-chat-main .prose {
+  max-width: 100% !important;
+  word-break: break-word !important;
+  overflow-wrap: anywhere !important;
+}
+
+/* Дополнительные утилиты для сообщений */
+.message-content {
+  word-break: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
+}
+
+.code-wrapper {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+/* КРИТИЧЕСКИЕ ИСПРАВЛЕНИЯ ДЛЯ ОТСТУПОВ */
+.ai-chat-padding {
+  padding-left: 0.5rem !important;
+  padding-right: 0.5rem !important;
+}
+
+.ai-chat-padding-wide {
+  padding-left: 0.75rem !important;
+  padding-right: 0.75rem !important;
+}
+
+/* Убираем лишние отступы у сообщений */
+.message-bubble {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* Гарантия что контент использует всю доступную ширину */
+.ai-chat-full-width {
+  width: 100% !important;
+}
+
+.ai-chat-max-width-98 {
+  max-width: 98% !important;
+}
+
+.ai-chat-max-width-96 {
+  max-width: 96% !important;
+}
+
+.ai-chat-max-width-99 {
+  max-width: 99% !important;
+}
+
+/* Мобильные исправления - еще уже отступы */
+@media (max-width: 640px) {
+  .ai-chat-padding {
+    padding-left: 0.25rem !important;
+    padding-right: 0.25rem !important;
+  }
+  
+  .ai-chat-max-width-98 {
+    max-width: 99% !important;
+  }
+  
+  /* Убираем отступы у аватаров */
+  .ai-chat-gap-small {
+    gap: 0.5rem !important;
+  }
+}
+
+/* Для очень маленьких экранов */
+@media (max-width: 380px) {
+  .ai-chat-padding {
+    padding-left: 0.125rem !important;
+    padding-right: 0.125rem !important;
+  }
+  
+  .ai-chat-message-padding {
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+  }
+}
+
+/* РАДИКАЛЬНЫЕ ИСПРАВЛЕНИЯ ДЛЯ ЧАТА - ПРИОРИТЕТ ВЫСОКИЙ */
+.ai-chat-container {
+  width: 100vw !important;
+  max-width: 100vw !important;
+  overflow-x: hidden !important;
+}
+
+.ai-chat-main {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+}
+
+/* ОБЛАСТЬ СООБЩЕНИЙ - НУЛЕВЫЕ ОТСТУПЫ */
+.ai-chat-main .px-0 {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+.ai-chat-main .py-4 {
+  padding-top: 1rem !important;
+  padding-bottom: 1rem !important;
+}
+
+/* КОНТЕЙНЕР СООБЩЕНИЙ - 100% ШИРИНА */
+.ai-chat-main .w-full {
+  width: 100% !important;
+}
+
+.ai-chat-main .space-y-4 > * {
+  width: 100% !important;
+}
+
+/* БАБЛЫ СООБЩЕНИЙ - ПОЛНАЯ ШИРИНА БЕЗ ОГРАНИЧЕНИЙ */
+.ai-chat-main .max-w-full {
+  max-width: 100% !important;
+  width: auto !important;
+}
+
+/* ДЛЯ СООБЩЕНИЙ ПОЛЬЗОВАТЕЛЯ - ВЫРАВНИВАНИЕ ВПРАВО */
+.ai-chat-main .ml-auto {
+  margin-left: auto !important;
+  margin-right: 0.5rem !important;
+}
+
+/* ДЛЯ СООБЩЕНИЙ АССИСТЕНТА - ВЫРАВНИВАНИЕ ВЛЕВО */
+.ai-chat-main .bg-muted {
+  margin-left: 0.5rem !important;
+  margin-right: auto !important;
+}
+
+/* АВАТАРЫ - УМЕНЬШАЕМ ОТСТУПЫ */
+.ai-chat-main .gap-3 {
+  gap: 0.5rem !important;
+}
+
+/* MARKDOWN КОНТЕНТ - ПОЛНАЯ ШИРИНА */
+.prose {
+  max-width: 100% !important;
+  width: 100% !important;
+}
+
+.prose * {
+  max-width: 100% !important;
+}
+
+/* КОД БЛОКИ - ШИРИНА 100% */
+.prose pre {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* МОБИЛЬНЫЕ ИСПРАВЛЕНИЯ */
+@media (max-width: 768px) {
+  .ai-chat-main .px-0 {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  
+  .ai-chat-main .max-w-full {
+    max-width: 100% !important;
+    width: 95% !important;
+  }
+  
+  .ai-chat-main .ml-auto {
+    margin-right: 0.25rem !important;
+  }
+  
+  .ai-chat-main .bg-muted {
+    margin-left: 0.25rem !important;
+  }
+  
+  /* ЕЩЕ БОЛЬШЕ УМЕНЬШАЕМ ОТСТУПЫ НА МОБИЛЬНЫХ */
+  .ai-chat-main .gap-3 {
+    gap: 0.25rem !important;
+  }
+  
+  .ai-chat-main .px-3 {
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+  }
+}
+
+/* ДЕСКТОПНЫЕ ИСПРАВЛЕНИЯ */
+@media (min-width: 1024px) {
+  .ai-chat-main .max-w-full {
+    max-width: 100% !important;
+    width: 85% !important;
+  }
+}
+
+/* ЭКСТРЕННЫЕ ПРАВИЛА ДЛЯ ОЧЕНЬ ДЛИННОГО ТЕКСТА */
+.break-words {
+  word-break: break-word !important;
+  overflow-wrap: anywhere !important;
+}
+
+.whitespace-pre-wrap {
+  white-space: pre-wrap !important;
+}
+
+/* ГАРАНТИЯ ЧТО НИЧТО НЕ ВЫХОДИТ ЗА ПРЕДЕЛЫ */
+.ai-chat-main * {
+  box-sizing: border-box !important;
+  max-width: 100% !important;
 }
